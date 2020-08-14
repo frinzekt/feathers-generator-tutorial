@@ -1,3 +1,4 @@
+//  NODE APPLICATION DEPENDENCIES
 const path = require('path');
 const favicon = require('serve-favicon');
 const compress = require('compression');
@@ -5,19 +6,22 @@ const helmet = require('helmet');
 const cors = require('cors');
 const logger = require('./logger');
 
+//  FEATHERS APPLICATION DEPENDENCIES - lightweight wrappers
 const feathers = require('@feathersjs/feathers');
 const configuration = require('@feathersjs/configuration');
 const express = require('@feathersjs/express');
 const socketio = require('@feathersjs/socketio');
 
-
+// OWN MIDDLEWARES FOR THE ENTIRE APP IMPORTATION
 const middleware = require('./middleware');
 const services = require('./services');
 const appHooks = require('./app.hooks');
 const channels = require('./channels');
 
+//  AUTH
 const authentication = require('./authentication');
 
+//  CREATION OF EXPRESS APPLICATION
 const app = express(feathers());
 
 // Load app configuration
