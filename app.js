@@ -55,3 +55,8 @@ app.use(express.errorHandler({ logger }));
 app.hooks(appHooks);
 
 module.exports = app;
+
+/*
+Configure Function is just a function that takes the app and applies configuration towards the app variable
+- great way to keep codes modular as you only have pass app, and eveyrthing can be taken from such as configuration variable and so on
+*/

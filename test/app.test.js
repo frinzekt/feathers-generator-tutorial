@@ -29,7 +29,9 @@ describe('Feathers application tests', () => {
     assert.ok(data.indexOf('<html lang="en">') !== -1);
   });
 
-  describe('404', function() {
+// DOES IT RENDER 404 Page
+  describe('404', function () {
+// 404 HTML
     it('shows a 404 HTML page', async () => {
       try {
         await axios.get(getUrl('path/to/nowhere'), {
@@ -46,6 +48,7 @@ describe('Feathers application tests', () => {
       }
     });
 
+  // 404 JSON
     it('shows a 404 JSON error without stack trace', async () => {
       try {
         await axios.get(getUrl('path/to/nowhere'), {
