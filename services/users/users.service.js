@@ -3,8 +3,9 @@ const { Users } = require('./users.class');
 const createModel = require('../../models/users.model');
 const hooks = require('./users.hooks');
 
+// EXPORTS A CONFIGURATION FUNCTION
 module.exports = function (app) {
-  const options = {
+  const options = { // USES APP TO GET PARAMETER ON APP CONFIG
     Model: createModel(app),
     paginate: app.get('paginate')
   };
