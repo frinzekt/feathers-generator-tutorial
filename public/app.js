@@ -34,11 +34,6 @@ const login = async (credentials) => {
 
 const main = async () => {
   const auth = await login();
-
-  console.log("User is authenicatedt: ", auth);
-
-  // logout
-  await appClient.logout();
 };
 
 main();
@@ -155,4 +150,13 @@ addEventListener("#signup", "click", async () => {
   // CREATE THE USER
   await appClient.service("users").create(credentials);
   await login(credentials);
+});
+addEventListener("#login", "click", async () => {
+  const credentials = getCredentials();
+  await login(credentials);
+});
+
+addEventListener("#logout", "click", async () => {
+  await appClient.logout();
+  showLogin();
 });
