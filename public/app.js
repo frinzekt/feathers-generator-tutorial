@@ -11,17 +11,23 @@ appClient.configure(
   })
 );
 
-const login = async () => {
+const login = async (credentials) => {
   //FIRST REAUTHENTICATE  CLIENT
   try {
-    return await appClient.reAuthenticate();
+    if (!credentials) {
+      await appClient.reAuthenticate();
+    } else {
+      await appClient.authenticate({
+        strategy: "local",
+        ...credentials,
+      });
+    }
+
+    // SUCCESSFUL = SHOW CHAT MESSAGES
+    console.log("SUCCESSFUL LOGIN");
   } catch (error) {
-    //  NO STORED TOKEN
-    return await appClient.authenticate({
-      strategy: "local",
-      email: "heallo@feathersjs.com",
-      password: "secret",
-    }); // THIS IS HARD CODED ATM, CHANGE IT
+    // THIS MEANS THAT WE ARE NOT ABLE TO REAUTHENTICATE NOR LOGIN
+    showLogin(error);
   }
 };
 
@@ -70,8 +76,41 @@ const loginHTML = `<main class="login container">
   </div>
 </main>`;
 
-const showLogin = () => {
-  document.getElementById("app").innerHTML = loginHTML;
+const showLogin = (error) => {
+  // IF LOGIN IS SHOWN AND THERE IS AN ERROR
+  if (document.querySelectorAll(".login").length && error) {
+    document
+      .querySelector(".heading")
+      .insertAdjacentHTML(
+        "beforeend",
+        `<p>There was an error: ${error.message}</p>`
+      );
+  } else {
+    document.getElementById("app").innerHTML = loginHTML;
+  }
 };
 
-showLogin();
+const getCredentials = () => {
+  const user = {
+    email: document.querySelector(`[name="email"]`).value,
+    password: document.querySelector(`[name="password"]`).value,
+  };
+  return user;
+};
+
+// WHEN THE USER CLICK THE SIGN UP THIS WILL BE HANDLED - this is just a helper functio
+const addEventListener = (selector, event, handler) => {
+  document.addEventListener(event, async (ev) => {
+    if (ev.target.closest(selector)) {
+      handler(ev);
+    }
+  });
+};
+
+addEventListener("#signup", "click", async () => {
+  const credentials = getCredentials();
+
+  // CREATE THE USER
+  await appClient.service("users").create(credentials);
+  await login(credentials);
+});
