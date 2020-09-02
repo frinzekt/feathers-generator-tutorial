@@ -12,9 +12,13 @@ class GitHubStrategy extends OAuthStrategy {
   // EXTENDS FUNCTIONALITY OF THE GET ENTITY
   async getEntityData(profile) {
     const baseData = await super.getEntityData(profile);
-
     // INCULDE BOTH THE EMAIL, AND THE BASEDATA
-    return { ...baseData, email: profile.email };
+    return {
+      ...baseData,
+      email: profile.email ? profile.email : profile.login,
+      name: profile.login,
+      avatar: profile.avatar_url,
+    };
   }
 }
 

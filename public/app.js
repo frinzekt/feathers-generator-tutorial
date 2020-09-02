@@ -237,3 +237,5 @@ addEventListener("#send-message", "submit", async (e) => {
 
 appClient.service("messages").on("created", addMessage);
 appClient.service("users").on("created", addUser);
+
+login();

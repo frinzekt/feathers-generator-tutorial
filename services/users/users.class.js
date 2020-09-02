@@ -13,14 +13,12 @@ exports.Users = class Users extends Service {
   //  DATa - data being sent to the server to create th user
   //  params - includes query strings
   create(data, params) {
-    const { email, password, githubId } = data;
-
+    let { email, login, password, githubId, avatar } = data;
     //  You need this to get user gravatar url
-    const hash = crypto
-      .createHash("md5")
-      .update(email.toLowerCase())
-      .digest("hex");
-    const avatar = `${gravatarUrl}/${hash}?${query}`;
+    if (!avatar) {
+      const hash = crypto.createHash("md5").update(email).digest("hex");
+      avatar = `${gravatarUrl}/${hash}?${query}`;
+    }
 
     const userData = {
       email,
