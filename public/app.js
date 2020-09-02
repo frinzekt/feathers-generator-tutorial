@@ -123,8 +123,69 @@ const showLogin = (error) => {
   }
 };
 
-const showChat = () => {
+const showChat = async () => {
   document.getElementById("app").innerHTML = chatHTML;
+
+  const messages = await appClient.service("messages").find({
+    query: {
+      $sort: { createdAt: -1 },
+      $limit: 50,
+    },
+  });
+
+  messages.data.reverse().forEach(addMessage);
+  console.log("messages: ", messages);
+  const users = await appClient.service("users").find();
+  console.log("users: ", users);
+
+  users.data.forEach(addUser);
+};
+
+const addUser = (user) => {
+  const userList = document.querySelector(".user-list");
+
+  if (userList) {
+    userList.innerHTML += `
+      <li>
+      <a href="" class="block relative">
+      <img src="${user.avatar}" alt="" class="avatar"/>
+      <span class="absolute username">${user.email}</span>
+      </a>
+      </li>
+      `;
+
+    const userCount = document.querySelectorAll(".user-list li").length;
+
+    document.querySelector(".online-count").innerHTML = userCount;
+  }
+};
+
+const addMessage = (message) => {
+  const { user = {} } = message;
+  const chat = document.querySelector(".chat");
+
+  // SANITIZE CHAT MESSAGE
+  const text = message.text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+  if (chat) {
+    chat.innerHTML += `<div class="message flex flex-row">
+    <img src="${user.avatar}" alt="${user.email}" class="avatar"/>
+    <div class="message-wrapper">
+    <p class="message-header">
+      <span class="username font-600">${user.email}</span>
+      <span class="sent-date font-300">${moment(message.createAt).format(
+        "MMM Do, hh:mm:ss"
+      )}</span>
+    </p>
+    <p class="message-content font-300">${text}</p>
+    </div>
+    </div>`;
+
+    chat.scrollTop = chat.scrollHeight - chat.clientHeight;
+  }
 };
 
 const getCredentials = () => {
@@ -160,3 +221,19 @@ addEventListener("#logout", "click", async () => {
   await appClient.logout();
   showLogin();
 });
+
+addEventListener("#send-message", "submit", async (e) => {
+  e.preventDefault();
+  const input = document.querySelector('[name="text"]');
+
+  await appClient.service("messages").create({
+    text: input.value,
+  });
+
+  input.value = "";
+});
+
+// SOCKETS
+
+appClient.service("messages").on("created", addMessage);
+appClient.service("users").on("created", addUser);
