@@ -1,4 +1,36 @@
 {
-  "host": "feathers-generator-tutorial-app.feathersjs.com",
-  "port": "PORT"
+  "host": "feathers-chat-cfc.herokuapp.com",
+  "port": "PORT",
+  "public": "../public/",
+  "paginate": {
+    "default": 10,
+    "max": 50
+  },
+  "authentication": {
+    "oauth": {
+      "redirect": "/",
+      "github": {
+        "key": "GITHUB_CLIENT_ID",
+        "secret": "GITHUB_CLIENT_SECRET"
+      }
+    },
+    "entity": "user",
+    "service": "users",
+    "secret": "9Niw2xuGnr5JLJ+dxJ5Wjrq3um4=",
+    "authStrategies": ["jwt", "local"],
+    "jwtOptions": {
+      "header": {
+        "typ": "access"
+      },
+      "audience": "feathers-chat-cfc.herokuapp.com",
+      "issuer": "feathers",
+      "algorithm": "HS256",
+      "expiresIn": "1d"
+    },
+    "local": {
+      "usernameField": "email",
+      "passwordField": "password"
+    }
+  },
+  "nedb": "../data"
 }
