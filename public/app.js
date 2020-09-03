@@ -29,6 +29,7 @@ const login = async (credentials) => {
   } catch (error) {
     // THIS MEANS THAT WE ARE NOT ABLE TO REAUTHENTICATE NOR LOGIN
     showLogin(error);
+    localStorage.clear();
   }
 };
 
